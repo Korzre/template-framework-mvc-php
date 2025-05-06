@@ -1,0 +1,7 @@
+{
+  "name": "vendor/entrando-mvc",
+  "description": "Framework MVC Simples",
+  "require": {
+    "php": ">=7.4"
+  }
+}
