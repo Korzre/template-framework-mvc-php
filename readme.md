@@ -10,4 +10,4 @@
 
 Depois é só entrar na pasta public e dar um `php -S localhost:8000`
 
-<img src="estrutura-projeto.png">
+<img src="estrutura.png">
