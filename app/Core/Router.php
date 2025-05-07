@@ -11,7 +11,7 @@ class Router
 
     public function resolve()
     {
-        $url = $_SERVER['REQUEST_URI'];
+        $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
 
         if (isset($this->routes[$method][$url])) {
@@ -21,8 +21,26 @@ class Router
 
             $controllerObj = new $controller();
             $controllerObj->$action();
-        } else {
-            echo "404 Not Found";
+            return;
         }
+
+        foreach ($this->routes[$method] as $route => $controller) {
+            $pattern = preg_replace('#\{[^/]+\}#', '([^/]+)', $route);
+            $pattern = "#^" . $pattern . "$#";
+
+            if (preg_match($pattern, $url, $matches)) {
+                array_shift($matches); // Remove o match completo
+
+                $controllerAction = explode('@', $controller);
+                $controllerName = $controllerAction[0];
+                $actionName = $controllerAction[1];
+
+                $controllerObj = new $controllerName();
+                $controllerObj->$actionName($matches);
+                return;
+            }
+        }
+
+        echo "404 Not Found";
     }
 }

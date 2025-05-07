@@ -12,4 +12,9 @@ class HomeController extends Controller
     {
         echo "Fotos!";
     }
+
+    public function foto($parametros){
+        echo "Foto...";
+       print_r($parametros);
+    }
 }
