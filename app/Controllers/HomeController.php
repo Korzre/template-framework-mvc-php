@@ -14,7 +14,6 @@ class HomeController extends Controller
     }
 
     public function foto($parametros){
-        echo "Foto...";
-       print_r($parametros);
+        echo "Acessando a foto: ".$parametros['id'];
     }
 }
