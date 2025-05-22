@@ -4,8 +4,23 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $data = ['title' => 'Home Page'];
-        $this->view('home', $data);
+
+       $posts = [
+            ['titulo'=> 'Teste1', 'corpo'=>'Testando!'],
+            ['titulo'=> 'Teste14e', 'corpo'=>'Testandoee!'],
+            ['titulo'=> 'Teste14e', 'corpo'=>'Testandoee!']
+            
+        ];
+
+         $nome="Danilo";
+         $this->view('home', 
+         ['nome'=>$nome,
+                'idade'=>10,
+                'posts'=>$posts
+         ]
+           
+        );
+        
     }
 
     public function fotos()
