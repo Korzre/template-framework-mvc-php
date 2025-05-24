@@ -1,11 +1,19 @@
 <?php
 class Router
 {
-    private $routes = [];
+    private $routes = [
+        'GET' => [],
+        'POST' => []
+    ];
 
     public function get($url, $controller)
     {
         $this->routes['GET'][$url] = $controller;
+    }
+
+    public function post($url, $controller)
+    {
+        $this->routes['POST'][$url] = $controller;
     }
 
     public function resolve()
