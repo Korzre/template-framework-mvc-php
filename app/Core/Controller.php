@@ -1,4 +1,5 @@
 <?php
+namespace app\Core;
 
 abstract class Controller
 {
@@ -6,5 +7,11 @@ abstract class Controller
     {
         extract($data);
         require_once __DIR__ . "/../Views/$view.php";
+    }
+
+     protected function redirect($url)
+    {
+        header("Location: " . $url);
+        exit;
     }
 }

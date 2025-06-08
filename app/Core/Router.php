@@ -1,9 +1,14 @@
 <?php
+
+namespace app\Core;
+
 class Router
 {
     private $routes = [
         'GET' => [],
-        'POST' => []
+        'POST' => [],
+        'PUT' => [],
+        'DELETE' => []
     ];
 
     public function get($url, $controller)
@@ -16,43 +21,40 @@ class Router
         $this->routes['POST'][$url] = $controller;
     }
 
+    public function delete($url, $controller)
+    {
+        $this->routes['DELETE'][$url] = $controller;
+    }
+
+    public function put($url, $controller)
+    {
+        $this->routes['PUT'][$url] = $controller;
+    }
+
     public function resolve()
     {
-        $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
         $method = $_SERVER['REQUEST_METHOD'];
 
-        if (isset($this->routes[$method][$url])) {
+        foreach ($this->routes[$method] as $route => $controllerAction) {
+            $routePattern = preg_replace('/:\w+/', '(\w+)', trim($route, '/'));
+            $routeRegex = "#^{$routePattern}$#";
 
-            $controllerAction = explode('@', $this->routes[$method][$url]);
-            $controller = $controllerAction[0];
-            $action = $controllerAction[1];
+            if (preg_match($routeRegex, $uri, $matches)) {
+                array_shift($matches); // remove full match
+                [$controller, $action] = explode('@', $controllerAction);
 
-            $controllerObj = new $controller();
-            $controllerObj->$action();
-            return;
-        }
+                $controllerClass = "app\\Controllers\\$controller";
 
-        foreach ($this->routes[$method] as $route => $controller) {
-            $pattern = preg_replace('#\{([^/]+)\}#', '([^/]+)', $route);  // Ajustado para capturar o nome da chave
-            $pattern = "#^" . $pattern . "$#";
-
-            if (preg_match($pattern, $url, $matches)) {
-                array_shift($matches); // Remove o match completo
-
-                preg_match_all('#\{([^/]+)\}#', $route, $keys);
-                $params = array_combine($keys[1], $matches);  // Associa a chave ao valor do parâmetro
-
-                $controllerAction = explode('@', $controller);
-                $controllerName = $controllerAction[0];
-                $actionName = $controllerAction[1];
-
-                $controllerObj = new $controllerName();
-                $controllerObj->$actionName($params);  // Passa o array associativo
-                return;
+                if (class_exists($controllerClass) && method_exists($controllerClass, $action)) {
+                    call_user_func_array([new $controllerClass, $action], $matches);
+                    return;
+                }
             }
         }
 
-        echo "404 Not Found";
+        http_response_code(404);
+        echo "404 - Página não encontrada";
     }
 }
 

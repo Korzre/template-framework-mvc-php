@@ -2,6 +2,14 @@
   "name": "vendor/entrando-mvc",
   "description": "Framework MVC Simples",
   "require": {
-    "php": ">=7.4"
+    "php": ">=7.4",
+    "vlucas/phpdotenv": "^5.6"
+  },
+
+  "autoload": {
+    "psr-4": {
+        "app\\": "app/"
+    }
   }
+
 }

@@ -1,5 +1,8 @@
 ## Template para um simples framework MVC
 
+
+![](./estrutura.png)
+
 - [x] Sistema de rotas
 
 - [x]  Estrutura das pastas 
@@ -10,4 +13,4 @@
 
 Depois é só entrar na pasta public e dar um `php -S localhost:8000`
 
-<img src="estrutura.png">
+
